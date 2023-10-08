@@ -211,6 +211,13 @@ class PdoGsb{
 		$this->monPdo->exec($req);
 	}
 
+	public function getVisiteurs(){
+		$sql="Select id,nom,prenom From visiteur";
+		$res = $this->monPdo->query($sql);
+		$laLigne = $res->fetch();
+		return $laLigne;
+	}
+
 
 
 

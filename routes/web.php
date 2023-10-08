@@ -53,5 +53,13 @@ Route::get('test',[
         'uses'=>'etatFraisController@test'
 ]);
 
+Route::get('visiteurs',[
+        'as'=>'chemin_visiteurs',
+        'uses'=>'gestionVisiteurController@liste_visiteurs'
+]);
+
+
+Route::get('/ajouter',[ gestionVisiteurController::class,'ajouter_visiteur']);
+
 
 

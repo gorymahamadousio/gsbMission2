@@ -20,6 +20,9 @@
                     <a href="{{ route('chemin_test') }}" title="Consultation de mes fiches de frais">Test</a>
                   </li>
                   <li class="smenu">
+                    <a href="{{ route('chemin_visiteurs') }}" title="gerer les visiteurs">Gérer les visiteurs</a>
+                  </li>
+                  <li class="smenu">
                     <a href="{{ route('chemin_deconnexion') }}" title="Se déconnecter">Déconnexion</a>
                   </li>
                 </ul>
