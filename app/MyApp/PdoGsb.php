@@ -211,15 +211,73 @@ class PdoGsb{
 		$this->monPdo->exec($req);
 	}
 
+	//Misson 2A
+
+	//récupération des visiteur depuis la base
 	public function getVisiteurs(){
-		$sql="Select id,nom,prenom From visiteur";
-		$res = $this->monPdo->query($sql);
-		$laLigne = $res->fetch();
+		$sql="Select * From visiteur";
+
+		$stmt = $this->monPdo->prepare($sql);
+		
+		$stmt->execute();
+
+		$laLigne= $stmt->fetchAll();
 		return $laLigne;
 	}
 
+	//ajout d'un nouveau visiteur dans la base
+	public function ajouterVisiteur($idVisiteur,$nom,$prenom,$login,$mdp,$adresse,$cp,$ville,$dateEmbauche){
+		$sql="INSERT INTO `visiteur`(`id`, `nom`, `prenom`, `login`, `mdp`, `adresse`, `cp`, `ville`, `dateEmbauche`)
+		VALUES (:id,:nom,:prenom,:logine,:mdp,:adresse,:cp,:ville,dateEmbauche)";
+
+		//on prepare la requête
+		$stmt=$this->monPdo->prepare($sql);
+
+		$stmt->bindParam(':id',$idVisiteur);
+		$stmt->bindParam(':nom',$nom);
+		$stmt->bindParam(':prenom',$prenom);
+		$stmt->bindParam(':logine',$login);
+		$stmt->bindParam(':mdp',$mdp);
+		$stmt->bindParam(':adresse',$adresse);
+		$stmt->bindParam(':cp',$cp);
+		$stmt->bindParam(':ville',$nom);
+		$stmt->bindParam(':dateEmbauche',$dateEmbauche);
+
+		
+		$res = $stmt->execute();
+		return $res;
+	}
+
+	//mise à jour des infos visiteurs
+	public function updateVisiteur($nom,$prenom,$login,$adresse,$cp,$ville,$dateEmbauche){
+		$sql="Update visteur set nom=:nom ,prenom=:prenom,login=:login,adresse=:adresse,cp=:cp,ville=:ville,dateEmbauche=:dateEmbauche";
+
+		$stmt=$this->monPdo->prepare($sql);
+
+		$stmt->bindParam(':nom',$nom);
+		$stmt->bindParam(':prenom',$prenom);
+		$stmt->bindParam(':login',$login);
+		$stmt->bindParam(':adresse',$adresse);
+		$stmt->bindParam(':cp',$cp);
+		$stmt->bindParam(':ville',$nom);
+		$stmt->bindParam(':dateEmbauche',$dateEmbauche);
+
+		$res = $stmt->execute();
+		return $res;
+	}
 
 
+	//fonction qui va permettre d'affiche les infos d'un id précis
+	public function getIdVisiteurs($idVisiteur){
+		$sql="Select * From visiteur where id=:idVisiteur";
 
+		$stmt = $this->monPdo->prepare($sql);
+		$stmt->bindParam(':idVisiteur',$idVisiteur);
+		$stmt->execute();
+
+		$laLigne= $stmt->fetchAll();
+		return $laLigne;
+	
+	}
 
 }

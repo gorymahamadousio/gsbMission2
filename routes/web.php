@@ -53,13 +53,26 @@ Route::get('test',[
         'uses'=>'etatFraisController@test'
 ]);
 
+
+//route qui redirige vers mon controller gestionVisiteurController et va pointer sur la fonction concernée
 Route::get('visiteurs',[
         'as'=>'chemin_visiteurs',
         'uses'=>'gestionVisiteurController@liste_visiteurs'
 ]);
 
 
-Route::get('/ajouter',[ gestionVisiteurController::class,'ajouter_visiteur']);
+Route::post('ajouterVisiteur',[ 
+        'as'=>'chemin_ajouter',
+        'uses'=>'gestionVisiteurController@ajouter_visiteur'
+]);
 
 
+Route::get('infosVisiteur',[ 
+        'as'=>'chemin_infosVisiteur',
+        'uses'=>'gestionVisiteurController@infosVisit'
+]);
 
+Route::post('updateVisiteur',[ 
+        'as'=>'chemin_updateVisiteur',
+        'uses'=>'gestionVisiteurController@update_visiteur'
+]);
