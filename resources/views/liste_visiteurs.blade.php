@@ -22,7 +22,27 @@
                                     <td>{{ $visiteur['prenom' ]}}</td>
                                     <td>
                                         <a href="{{ route('chemin_infosVisiteur', ['id'=>$visiteur['id']])}}" class="btn btn-primary">update</a>
-                                        <a href="" class="btn btn-info">étas</a>
+                                        <a href="{{ route('chemin_etas', ['id'=>$visiteur['id']])}}" class="btn btn-info">étas</a>
+                                        <a href="{{ route('chemin_confirmation', ['id'=>$visiteur['id']])}}" class="btn btn-danger" onclick="confirm()">supprimer</a>
+                                        <script> 
+                                            function confirm() {
+                                                   // let rep = prompt("Êtes-vous sûr de vouloir supprimer cet utilisateur ? (O/N)");
+                                                    
+                                                 /*   if (rep === "o" || rep === "O") {
+                                                        // L'utilisateur a confirmé, rediriger vers la route de suppression
+                                                        location.href = "{{ route('chemin_deleteVisiteur', ['id' => $visiteur['id']]) }}";
+                                                        alert('Vous avez confirmé la suppression.');
+                                                    } else if (rep === "n" || rep === "N") {
+                                                        // L'utilisateur a annulé, rediriger vers la liste des visiteurs
+                                                        location.href = "{{ route('chemin_visiteurs') }}";
+                                                        alert("Vous avez décidé de ne pas supprimer le visiteur.");
+                                                    } else {
+                                                        // Si la réponse n'est pas valide, rediriger vers la liste des visiteurs
+                                                        location.href = "{{ route('chemin_visiteurs') }}";
+                                                        alert("Réponse invalide. Vous avez décidé de ne pas supprimer le visiteur.");
+                                                    }*/
+                                                }
+                                        </script>
                                     </td>
                                 </tr>
                                 @endforeach

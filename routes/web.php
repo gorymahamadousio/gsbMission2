@@ -61,9 +61,14 @@ Route::get('visiteurs',[
 ]);
 
 
-Route::post('ajouterVisiteur',[ 
+Route::get('ajouterVisiteur',[ 
         'as'=>'chemin_ajouter',
         'uses'=>'gestionVisiteurController@ajouter_visiteur'
+]);
+
+Route::post('ajouterVisiteurAction',[ 
+        'as'=>'chemin_ajouterAction',
+        'uses'=>'gestionVisiteurController@ajouter_visiteurAction'
 ]);
 
 
@@ -75,4 +80,30 @@ Route::get('infosVisiteur',[
 Route::post('updateVisiteur',[ 
         'as'=>'chemin_updateVisiteur',
         'uses'=>'gestionVisiteurController@update_visiteur'
+]);
+
+Route::get('confirmationSuppresion',[ 
+        'as'=>'chemin_confirmation',
+        'uses'=>'gestionVisiteurController@confirmation'
+]);
+
+
+Route::get('deleteVisiteur',[ 
+        'as'=>'chemin_deleteVisiteur',
+        'uses'=>'gestionVisiteurController@delete_visiteur'
+]);
+
+Route::get('etas',[ 
+        'as'=>'chemin_etas',
+        'uses'=>'gestionVisiteurController@etas_visiteur'
+]);
+
+Route::get('valideFrais',[ 
+        'as'=>'chemin_valideFrais',
+        'uses'=>'gestionVisiteurController@valide_frais'
+]);
+
+Route::get('voirValideFrais',[ 
+        'as'=>'chemin_voirValideFrais',
+        'uses'=>'gestionVisiteurController@voir_valide_frais'
 ]);

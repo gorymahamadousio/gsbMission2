@@ -14,26 +14,26 @@
                     <li class="alert alert-success">{{$error}}</li>
                    @endforeach
                 </ul>
-                  <form action="{{chemin_ajouter}}" method="POST">
+                  <form action="{{route('chemin_ajouterAction')}}" method="POST">
                     @csrf
                   <div class="mb-3">
-                     <input type="text" class="form-control" name="id" placeholder="id">
+                     <input type="text" class="form-control" name="id" placeholder="id"><br>
 
-                      <input type="text" class="form-control" name="nom" placeholder="Nom du visiteur">
+                      <input type="text" class="form-control" name="nom" placeholder="Nom du visiteur"><br>
 
-                      <input type="text" class="form-control" name="prenom" placeholder="Prenom du visiteur">
+                      <input type="text" class="form-control" name="prenom" placeholder="Prenom du visiteur"><br>
 
-                      <input type="text" class="form-control" name="login" placeholder="Login du visiteur">
+                      <input type="text" class="form-control" name="login" placeholder="Login du visiteur"><br>
 
-                      <input type="password" class="form-control" name="mdp" placeholder="Mot de passe">
+                      <input type="password" class="form-control" name="mdp" placeholder="Mot de passe"><br>
                       
-                      <input type="text" class="form-control" name="adresse" placeholder="adresse du visiteur">
+                      <input type="text" class="form-control" name="adresse" placeholder="adresse du visiteur"><br>
 
-                      <input type="text" class="form-control" name="cp" placeholder="code postal du visiteur">
+                      <input type="text" class="form-control" name="cp" placeholder="code postal du visiteur"><br>
 
-                      <input type="text" class="form-control" name="ville" placeholder="Ville du visiteur">
+                      <input type="text" class="form-control" name="ville" placeholder="Ville du visiteur"><br>
 
-                      <input type="date" class="form-control" name="dateEmbauche" placeholder="date d'embauche du visiteur">
+                      <input type="date" class="form-control" name="dateEmbauche" placeholder="date d'embauche du visiteur"><br>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Valider</button>

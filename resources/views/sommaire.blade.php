@@ -23,6 +23,9 @@
                     <a href="{{ route('chemin_visiteurs') }}" title="gerer les visiteurs">Gérer les visiteurs</a>
                   </li>
                   <li class="smenu">
+                    <a href="{{ route('chemin_valideFrais') }}" title="gerer les frais visiteurs">mission2B</a>
+                  </li>
+                  <li class="smenu">
                     <a href="{{ route('chemin_deconnexion') }}" title="Se déconnecter">Déconnexion</a>
                   </li>
                 </ul>

@@ -228,8 +228,9 @@ class PdoGsb{
 	//ajout d'un nouveau visiteur dans la base
 	public function ajouterVisiteur($idVisiteur,$nom,$prenom,$login,$mdp,$adresse,$cp,$ville,$dateEmbauche){
 		$sql="INSERT INTO `visiteur`(`id`, `nom`, `prenom`, `login`, `mdp`, `adresse`, `cp`, `ville`, `dateEmbauche`)
-		VALUES (:id,:nom,:prenom,:logine,:mdp,:adresse,:cp,:ville,dateEmbauche)";
-
+		VALUES (:id,:nom,:prenom,:logine,:mdp,:adresse,:cp,:ville,:dateEmbauche) 
+		ON DUPLICATE KEY UPDATE id = VALUES(id)";
+	
 		//on prepare la requête
 		$stmt=$this->monPdo->prepare($sql);
 
@@ -240,27 +241,56 @@ class PdoGsb{
 		$stmt->bindParam(':mdp',$mdp);
 		$stmt->bindParam(':adresse',$adresse);
 		$stmt->bindParam(':cp',$cp);
-		$stmt->bindParam(':ville',$nom);
+		$stmt->bindParam(':ville',$ville);
 		$stmt->bindParam(':dateEmbauche',$dateEmbauche);
-
 		
+	
 		$res = $stmt->execute();
+		echo 'resulat= '.$res;
 		return $res;
 	}
 
 	//mise à jour des infos visiteurs
-	public function updateVisiteur($nom,$prenom,$login,$adresse,$cp,$ville,$dateEmbauche){
-		$sql="Update visteur set nom=:nom ,prenom=:prenom,login=:login,adresse=:adresse,cp=:cp,ville=:ville,dateEmbauche=:dateEmbauche";
+	public function updateVisiteur($id,$nom,$prenom,$login,$adresse,$cp,$ville,$dateEmbauche){
+		$sql="Update visiteur set nom=:nom ,prenom=:prenom,login=:login,adresse=:adresse,cp=:cp,ville=:ville,dateEmbauche=:dateEmbauche 
+		where id=:id";
 
 		$stmt=$this->monPdo->prepare($sql);
 
+		$stmt->bindParam(':id',$id);
 		$stmt->bindParam(':nom',$nom);
 		$stmt->bindParam(':prenom',$prenom);
 		$stmt->bindParam(':login',$login);
 		$stmt->bindParam(':adresse',$adresse);
 		$stmt->bindParam(':cp',$cp);
-		$stmt->bindParam(':ville',$nom);
+		$stmt->bindParam(':ville',$ville);
 		$stmt->bindParam(':dateEmbauche',$dateEmbauche);
+		
+		$res = $stmt->execute();
+		return $res;
+	}
+
+	
+	//Supprimer également le visiteur dans la table fiche frais car il y a une contrainte (idVisiteur est une clés étrangére...)
+	public function deleteVisiteurFF($id){
+		$sql="delete  from fichefrais
+		where idVisiteur=:id";
+
+		$stmt=$this->monPdo->prepare($sql);
+
+		$stmt->bindParam(':id',$id);
+
+		$res = $stmt->execute();
+		return $res;
+	}
+	//Supprimer un visiteur
+	public function deleteVisiteur($id){
+		$sql="DELETE FROM `visiteur` 
+		WHERE id=:id";
+
+		$stmt=$this->monPdo->prepare($sql);
+
+		$stmt->bindParam(':id',$id);
 
 		$res = $stmt->execute();
 		return $res;
@@ -279,5 +309,25 @@ class PdoGsb{
 		return $laLigne;
 	
 	}
+
+
+	//fonction qui va permettre de calculer les frais sur un mois précis et pour un user donnée
+	public function getFraisMois($idVisiteur,$mois){
+        $req = "SELECT idVisiteur, 
+        sum((CASE WHEN li.idFraisForfait = 'ETP' then (li.quantite * ff.montant) END)) as 'ETP', 
+        sum((CASE WHEN li.idFraisForfait = 'KM' then (li.quantite * ff.montant) END)) as 'KM', 
+        sum((CASE WHEN li.idFraisForfait = 'NUI' then (li.quantite * ff.montant) END)) as 'NUI', 
+        sum((CASE WHEN li.idFraisForfait = 'REP' then (li.quantite * ff.montant) END)) as 'REP' 
+        from lignefraisforfait li inner join fraisforfait ff on li.idFraisForfait=ff.id 
+        where li.mois=':mois' 
+        GROUP BY idVisiteur";
+       
+	   	$stmt =$this->$monPdo->prepare($req);
+
+		$stmt->bindParam(':mois',$mois);
+        $laLigne = $stmt->fetchAll();
+
+        return $laLigne;
+    }
 
 }
