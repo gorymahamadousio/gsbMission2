@@ -20,19 +20,10 @@
                                     <td>{{ $visiteur['id'] }}</td>
                                     <td>{{ $visiteur['nom'] }}</td>
                                     <td>{{ $visiteur['prenom' ]}}</td>
-                                    <td>
-                                        <a href="{{ route('chemin_infosVisiteur', ['id'=>$visiteur['id'] ]) }}" class="btn btn-outline-info">update</a>
-                                        <a href="{{ route('chemin_etas', ['id'=>$visiteur['id'] ]) }}" class="btn btn-outline-info">état</a>
-                                        <a href="{{ route('chemin_deleteVisiteur', ['id'=>$visiteur['id'] ]) }}" class="btn btn-outline-danger" >supprimer</a>
-                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table><hr>
-                       
-                        <a href="{{ route('chemin_ajouter')}}" class="btn btn-secondary">Ajouter</a>
-                                    
-                    
                     </div>
                 </div>
             </div>

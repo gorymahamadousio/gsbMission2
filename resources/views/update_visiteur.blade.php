@@ -14,11 +14,10 @@
                     <li class="alert alert-success">{{$error}}</li>
                    @endforeach
                 </ul>
-
-                  <form action="{{ route('chemin_updateVisiteur')}}" method="POST">
+                @foreach($findVisiteurs as $info)
+                  <form action="{{ route('chemin_updateVisiteur', ['id'=>$info['id'] ])}}" method="POST">
                     @csrf
                   <div class="mb-3">
-                    @foreach($findVisiteurs as $info)
                       <input type="text" class="form-control" name="nom" value="{{ $info['nom'] }}" placeholder="Nom du visiteur"><br>
                         
                       <input type="text" class="form-control" name="prenom" value="{{ $info['prenom'] }}" placeholder="Prenom du visiteur"><br>

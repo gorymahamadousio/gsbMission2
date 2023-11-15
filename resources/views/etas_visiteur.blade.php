@@ -1,6 +1,4 @@
 
-
-
 @extends ('sommaire')
     @section('contenu1')
             <div class="container text-center">

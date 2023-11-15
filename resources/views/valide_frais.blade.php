@@ -2,12 +2,12 @@
     @section('contenu1')
       <div id="contenu">
         <h3>Mes fiches de frais a valider</h3>
-      <form action="{{ route('chemin_valideFrais') }}" method="post">
+      <form action="{{ route('chemin_voirValideFrais') }}" method="post">
         {{ csrf_field() }} <!-- laravel va ajouter un champ caché avec un token -->
         <div class="corpsForm align-item-center">
         <label for="visiteur" >Visiteur : </label>
           <select id="visiteur" name="id">
-              @foreach($infosVisiteur as $info)
+              @foreach($infos as $info)
                     <option selected value="{{ $info['id'] }}">
                       {{ $info['nom']}}  {{$info['prenom'] }} 
                     </option>

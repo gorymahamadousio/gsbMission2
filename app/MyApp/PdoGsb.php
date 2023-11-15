@@ -35,7 +35,7 @@ class PdoGsb{
  * @return l'id, le nom et le prénom sous la forme d'un tableau associatif 
 */
 	public function getInfosVisiteur($login, $mdp){
-		$req = "select visiteur.id as id, visiteur.nom as nom, visiteur.prenom as prenom from visiteur 
+		$req = "select visiteur.id as id, visiteur.nom as nom, visiteur.prenom as prenom,visiteur.typeUser from visiteur 
         where visiteur.login='" . $login . "' and visiteur.mdp='" . $mdp ."'";
     	$rs = $this->monPdo->query($req);
 		$ligne = $rs->fetch();
@@ -192,9 +192,15 @@ class PdoGsb{
 	public function getLesInfosFicheFrais($idVisiteur,$mois){
 		$req = "select fichefrais.idEtat as idEtat, fichefrais.dateModif as dateModif, fichefrais.nbJustificatifs as nbJustificatifs, 
 			fichefrais.montantValide as montantValide, etat.libelle as libEtat from  fichefrais inner join etat on fichefrais.idEtat = etat.id 
-			where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'";
-		$res = $this->monPdo->query($req);
-		$laLigne = $res->fetch();
+			where fichefrais.idvisiteur =:idVisiteur and fichefrais.mois =:mois";
+		$stmt = $this->monPdo->prepare($req);
+
+		$stmt->bindParam(':idVisiteur',$idVisiteur);
+		$stmt->bindParam(':mois',$mois);
+
+		$stmt->execute();
+		$laLigne = $stmt->fetch();
+
 		return $laLigne;
 	}
 /**
@@ -225,6 +231,34 @@ class PdoGsb{
 		return $laLigne;
 	}
 
+	
+	//récupération des visiteur depuis la base
+	public function ajouterFicheFrais(){
+		$sql="";
+
+		$stmt = $this->monPdo->prepare($sql);
+		
+		$stmt->execute();
+
+		$laLigne= $stmt->fetchAll();
+		return $laLigne;
+	}
+
+	
+	//récupération des visiteur depuis la base
+	public function ajouterLigneFrais(){
+		$sql="";
+
+		$stmt = $this->monPdo->prepare($sql);
+		
+		$stmt->execute();
+
+		$laLigne= $stmt->fetchAll();
+		return $laLigne;
+	}
+
+
+
 	//ajout d'un nouveau visiteur dans la base
 	public function ajouterVisiteur($idVisiteur,$nom,$prenom,$login,$mdp,$adresse,$cp,$ville,$dateEmbauche){
 		$sql="INSERT INTO `visiteur`(`id`, `nom`, `prenom`, `login`, `mdp`, `adresse`, `cp`, `ville`, `dateEmbauche`)
@@ -252,7 +286,8 @@ class PdoGsb{
 
 	//mise à jour des infos visiteurs
 	public function updateVisiteur($id,$nom,$prenom,$login,$adresse,$cp,$ville,$dateEmbauche){
-		$sql="Update visiteur set nom=:nom ,prenom=:prenom,login=:login,adresse=:adresse,cp=:cp,ville=:ville,dateEmbauche=:dateEmbauche 
+		$sql="Update visiteur 
+		set nom=:nom ,prenom=:prenom,login=:login,adresse=:adresse,cp=:cp,ville=:ville,dateEmbauche=:dateEmbauche 
 		where id=:id";
 
 		$stmt=$this->monPdo->prepare($sql);
@@ -270,22 +305,37 @@ class PdoGsb{
 		return $res;
 	}
 
-	
-	//Supprimer également le visiteur dans la table fiche frais car il y a une contrainte (idVisiteur est une clés étrangére...)
-	public function deleteVisiteurFF($id){
-		$sql="delete  from fichefrais
-		where idVisiteur=:id";
+		//Supprimer un visiteur
+	public function deleteLigneFrais($idVisiteur){
+		$sql="DELETE FROM `lignefraisforfait` 
+		WHERE `idVisiteur`=:idVisiteur ";
 
 		$stmt=$this->monPdo->prepare($sql);
 
-		$stmt->bindParam(':id',$id);
+		$stmt->bindParam(':idVisiteur',$idVisiteur);
+	
 
 		$res = $stmt->execute();
 		return $res;
 	}
+
+	//Supprimer également le visiteur dans la table fiche frais car il y a une contrainte (idVisiteur est une clés étrangére...)
+	public function deleteVisiteurFF($id){
+		$sql="delete  from fichefrais
+		where `idVisiteur`=:idVisiteur";
+
+		$stmt=$this->monPdo->prepare($sql);
+
+		$stmt->bindParam(':idVisiteur',$id);
+
+		$res = $stmt->execute();
+		
+		return $res;
+	}
 	//Supprimer un visiteur
 	public function deleteVisiteur($id){
-		$sql="DELETE FROM `visiteur` 
+
+		$sql="DELETE FROM visiteur
 		WHERE id=:id";
 
 		$stmt=$this->monPdo->prepare($sql);
@@ -293,6 +343,7 @@ class PdoGsb{
 		$stmt->bindParam(':id',$id);
 
 		$res = $stmt->execute();
+
 		return $res;
 	}
 
@@ -311,6 +362,7 @@ class PdoGsb{
 	}
 
 
+	//2b
 	//fonction qui va permettre de calculer les frais sur un mois précis et pour un user donnée
 	public function getFraisMois($idVisiteur,$mois){
         $req = "SELECT idVisiteur, 
@@ -319,13 +371,15 @@ class PdoGsb{
         sum((CASE WHEN li.idFraisForfait = 'NUI' then (li.quantite * ff.montant) END)) as 'NUI', 
         sum((CASE WHEN li.idFraisForfait = 'REP' then (li.quantite * ff.montant) END)) as 'REP' 
         from lignefraisforfait li inner join fraisforfait ff on li.idFraisForfait=ff.id 
-        where li.mois=':mois' 
+        where li.mois=':mois' and li.idVisiteur=':idVisiteur'
         GROUP BY idVisiteur";
        
-	   	$stmt =$this->$monPdo->prepare($req);
+	   	$stmt =$this->monPdo->prepare($req);
 
+		$stmt->bindParam(':idVisiteur',$mois);
 		$stmt->bindParam(':mois',$mois);
         $laLigne = $stmt->fetchAll();
+
 
         return $laLigne;
     }

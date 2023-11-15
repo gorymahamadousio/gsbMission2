@@ -4371,10 +4371,7 @@ ALTER TABLE `lignefraisforfait`
   ADD CONSTRAINT `lignefraisforfait_ibfk_2` FOREIGN KEY (`idFraisForfait`) REFERENCES `fraisforfait` (`id`);
 
 
-
-
 ALTER TABLE `visiteur` ADD `typeUser` INT NOT NULL DEFAULT '1' AFTER `dateEmbauche`;
-
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

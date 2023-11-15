@@ -22,7 +22,7 @@ Route::post('/',[
 ]);
 Route::get('deconnexion',[
         'as'=>'chemin_deconnexion',
-        'uses'=>'connexionController@deconnecter'
+        'uses'=>'connexionController@deconnexion'
 ]);
 
          /*-------------------- Use case état des frais---------------------------*/
@@ -60,6 +60,11 @@ Route::get('visiteurs',[
         'uses'=>'gestionVisiteurController@liste_visiteurs'
 ]);
 
+Route::get('lstvisiteurs',[
+        'as'=>'chemin_visiteurs_simple',
+        'uses'=>'gestionVisiteurController@liste_visiteurs_simple'
+]);
+
 
 Route::get('ajouterVisiteur',[ 
         'as'=>'chemin_ajouter',
@@ -72,9 +77,9 @@ Route::post('ajouterVisiteurAction',[
 ]);
 
 
-Route::get('infosVisiteur',[ 
+Route::get('infosVisiteurModif',[ 
         'as'=>'chemin_infosVisiteur',
-        'uses'=>'gestionVisiteurController@infosVisit'
+        'uses'=>'gestionVisiteurController@infosVisitModif'
 ]);
 
 Route::post('updateVisiteur',[ 
@@ -82,10 +87,6 @@ Route::post('updateVisiteur',[
         'uses'=>'gestionVisiteurController@update_visiteur'
 ]);
 
-Route::get('confirmationSuppresion',[ 
-        'as'=>'chemin_confirmation',
-        'uses'=>'gestionVisiteurController@confirmation'
-]);
 
 
 Route::get('deleteVisiteur',[ 
@@ -103,7 +104,7 @@ Route::get('valideFrais',[
         'uses'=>'gestionVisiteurController@valide_frais'
 ]);
 
-Route::get('voirValideFrais',[ 
+Route::post('voirValideFrais',[ 
         'as'=>'chemin_voirValideFrais',
         'uses'=>'gestionVisiteurController@voir_valide_frais'
 ]);

@@ -34,6 +34,8 @@
                       <input type="text" class="form-control" name="ville" placeholder="Ville du visiteur"><br>
 
                       <input type="date" class="form-control" name="dateEmbauche" placeholder="date d'embauche du visiteur"><br>
+
+                      <input type="date" class="form-control" name="typeUser" placeholder="type"><br>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Valider</button>

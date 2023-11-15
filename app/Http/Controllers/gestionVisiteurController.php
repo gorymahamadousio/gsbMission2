@@ -10,24 +10,37 @@ class gestionVisiteurController extends Controller
     //fonction qui va permettre l'affichage de la liste des visiteurs
     public function liste_visiteurs(){
             //trés important ont vérifie toujours que l'on a une session de l'utilisateur par sécuriter sinon on accéde pas au page du site(la session est crée quand l'utilisateur se connecte) 
-            if( session('visiteur')!= null){
+            if( session('gestionnaire')!= null){
 
-            $visiteur2 = session('visiteur');
+            $gestionnaire = session('gestionnaire');
+
+            $listevisiteurs=PdoGsb::getVisiteurs();
+            return view('liste_visiteurs')->with('listevisiteurs',$listevisiteurs)
+                    ->with('gestionnaire', $gestionnaire);
+        }
+    }
+
+        //fonction qui va permettre l'affichage de la liste des visiteurs
+        public function liste_visiteurs_simple(){
+            //trés important ont vérifie toujours que l'on a une session de l'utilisateur par sécuriter sinon on accéde pas au page du site(la session est crée quand l'utilisateur se connecte) 
+            if( session('comptable')!= null){
+
+            $comptable = session('comptable');
 
             $listevisiteurs=PdoGsb::getVisiteurs();
             //dd($visiteurs);
-            return view('liste_visiteurs')->with('listevisiteurs',$listevisiteurs)
-                    ->with('visiteur', $visiteur2);
+            return view('listVisiteurSimple')->with('listevisiteurs',$listevisiteurs)
+                    ->with('comptable', $comptable);
         }
     }
 
     //récupération des infos que l'on souhaite 
     public function ajouter_Visiteur(){
        
-        if( (session('visiteur')!=null)){
+        if( (session('gestionnaire')!=null)){
             //récupération ID
-            $visiteur = session('visiteur');
-            return view('ajouter_visiteur')->with('visiteur', $visiteur);
+            $gestionnaire = session('gestionnaire');
+            return view('ajouter_visiteur')->with('gestionnaire', $gestionnaire);
 
         }else{
         echo'erreur';
@@ -41,7 +54,7 @@ class gestionVisiteurController extends Controller
     public function ajouter_visiteurAction(Request $request){
      
         //trés important ont vérifie toujours que l'on a une session de l'utilisateur par sécuriter sinon on accéde pas au page du site(la session est crée quand l'utilisateur se connecte) 
-        if((session('visiteur')!=null)){
+        if((session('gestionnaire')!=null)){
 
             //on va genérer un id aléatoire
             $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // Lettres possibles
@@ -50,7 +63,7 @@ class gestionVisiteurController extends Controller
             $randomID = $characters[rand(0, strlen($characters) - 1)]; // Choisis une lettre aléatoire
             
             // Ajoute 3 chiffres aléatoires
-            for ($i = 0; $i <3; $i++) {
+            for ($i = 0; $i <2; $i++) {
                 $randomID .= $nbr[rand(0, strlen($nbr) - 1)];
             }
             
@@ -67,28 +80,30 @@ class gestionVisiteurController extends Controller
             //appelle de la fonction qui contient ma requête d'insertion depuis mon model
             $ajouter=PdoGsb::ajouterVisiteur($idvisiteur,$nom,$prenom,$login,$mdp,$adresse,$cp,$ville,$dateEmbauche);
             //on revien à la mliste des visiteur une fois l'ajout effectuer
-            $visiteur2 = session('visiteur');
+            $gestionnaire = session('gestionnaire');
             $listevisiteurs=PdoGsb::getVisiteurs();
 
             //on retourne la vue en question et on associe les valeurs qui vont lui être "imputée" avec le with;
             return view('liste_visiteurs')->with('listevisiteurs',$listevisiteurs)
-                        ->with('visiteur', $visiteur2);
+                        ->with('gestionnaire', $gestionnaire);
         }
         
     }
 
-    //récupération des infos que l'on souhaite 
-    public function infosVisit(Request $request){
+    //récupération des infos que l'on souhaite afin de les modifier
+    public function infosVisitModif(Request $request){
        
-        if( (session('visiteur')!=null)){
+        if( (session('gestionnaire')!=null)){
             //récupération ID
-            $visiteur = session('visiteur');
+            $gestionnaire = session('gestionnaire');
             $idvisiteur = $request['id'];
            //appelle de la fonctioon qui va afficher les infos d'un utilisateur
             $findVisiteurs=PdoGsb::getIdVisiteurs($idvisiteur);
             //dd($findVisiteurs);
             return view('update_visiteur')->with('findVisiteurs',$findVisiteurs)
-                    ->with('visiteur', $visiteur);
+                    ->with('gestionnaire', $gestionnaire)
+                    ->with('idvisiteur', $idvisiteur);
+
            
         }else{
         echo'erreur';
@@ -100,34 +115,16 @@ class gestionVisiteurController extends Controller
     //récupération des infos que l'on souhaite afin d'afficher son etas
     public function etas_visiteur(Request $request){
     
-        if( (session('visiteur')!=null)){
+        if( (session('gestionnaire')!=null)){
             //récupération ID
-            $visiteur = session('visiteur');
+            $gestionnaire = session('gestionnaire');
             $idvisiteur = $request['id'];
-            //appelle de la fonctioon qui va afficher les infos d'un utilisateur
+            $listevisiteurs=PdoGsb::getVisiteurs();
+            //appelle de la fonction qui va afficher les infos d'un utilisateur
             $findVisiteurs=PdoGsb::getIdVisiteurs($idvisiteur);
             //dd($findVisiteurs);
             return view('etas_visiteur')->with('findVisiteurs',$findVisiteurs)
-                    ->with('visiteur', $visiteur);
-            
-        }else{
-        echo'erreur';
-        }
-
-    }
-
-    //récupération des infos que l'on souhaite afin d'afficher son etas
-    public function confirmation(Request $request){
-
-        if( (session('visiteur')!=null)){
-            //récupération ID
-            $visiteur = session('visiteur');
-            $idvisiteur = $request['id'];
-            //appelle de la fonctioon qui va afficher les infos d'un utilisateur
-            $findVisiteurs=PdoGsb::getIdVisiteurs($idvisiteur);
-            //dd($findVisiteurs);
-            return view('confirmation')->with('findVisiteurs',$findVisiteurs)
-                    ->with('visiteur', $visiteur);
+                    ->with('gestionnaire', $gestionnaire);
             
         }else{
         echo'erreur';
@@ -139,9 +136,11 @@ class gestionVisiteurController extends Controller
     public function update_visiteur(Request $request){
 
         //on vérifie si la session existe
-        if((session('visiteur')!=null)){
+        if((session('gestionnaire')!=null)){
             
+            $gestionnaire = session('gestionnaire');
             $idvisiteur=$request['id'];
+            //dd($idvisiteur);
             $nom=htmlspecialchars($request['nom']);
             $prenom=htmlspecialchars($request['prenom']);
             $login=htmlspecialchars($request['login']);
@@ -152,35 +151,39 @@ class gestionVisiteurController extends Controller
           
             //appelle de la fonction depuis le model
             $maj=PdoGsb::updateVisiteur($idvisiteur,$nom,$prenom,$login,$adresse,$cp,$ville,$dateEmbauche);
-            
-            //on revien à la mliste des visiteur une fois la maj effectuer
-            $visiteur2 = session('visiteur');
+            var_dump($maj);
+            //on revien à la liste des visiteur une fois la maj effectuer
             $listevisiteurs=PdoGsb::getVisiteurs();
-
+            echo 'carré';
             //on retourne la vue en question et on associe les valeurs qui vont lui être "imputée" avec le with;
             return view('liste_visiteurs')->with('listevisiteurs',$listevisiteurs)
-                        ->with('visiteur', $visiteur2);
-            } 
+                        ->with('gestionnaire', $gestionnaire);
+                        
+            }else echo "erreur";
         }
 
 
         //suppresion d'un utilisateur
         public function delete_visiteur(Request $request){
        
-        if( (session('visiteur')!=null)){
+        if( (session('gestionnaire')!=null)){
+
+            $gestionnaire = session('gestionnaire');
 
             $idvisiteur = $request['id'];
            //appelle de la fonctioon qui va supprimer le visiteur
-            $suppFF=PdoGsb::deleteVisiteurFF($idvisiteur);
+           $suppLi=PdoGsb::deleteLigneFrais($idvisiteur);
+           $suppFF=PdoGsb::deleteVisiteurFF($idvisiteur);
             $supprimer=PdoGsb::deleteVisiteur($idvisiteur);
            
-            //on revien à la mliste des visiteur une fois la maj effectuer
-            $visiteur2 = session('visiteur');
+            //on revien à la liste des visiteur une fois la maj effectuer
             $listevisiteurs=PdoGsb::getVisiteurs();
+            
 
             //on retourne la vue en question et on associe les valeurs qui vont lui être "imputée" avec le with;
-            return view('liste_visiteurs')->with('listevisiteurs',$listevisiteurs)
-                        ->with('visiteur', $visiteur2);
+            return view('liste_visiteurs')->with('gestionnaire', $gestionnaire)
+                    ->with('listevisiteurs',$listevisiteurs)
+                    ->with('supprimer', $supprimer);
            
         }else{
         echo'erreur lors de la suppression';
@@ -192,34 +195,39 @@ class gestionVisiteurController extends Controller
         //séléctions du mois et du visiteur concerner (pour afficher ses frais)
         public function valide_frais(){
        
-            if( (session('visiteur')!=null)){
+            if( (session('comptable')!=null)){
                 //récupération  session visiteur
-                $visiteur = session('visiteur');
-                $idVisiteur = $visiteur['id'];
+                $comptable = session('comptable');
+                $idVisiteur = $comptable['id'];
+                //infos des visiteur
+                $infos=PdoGsb::getVisiteurs();
                 //appelle de la fonction qui va permettre d'afficher les mois
                 $lesMois = PdoGsb::getLesMoisDisponibles($idVisiteur);
-                //infos des visiteur
-                $infosVisiteur=PdoGsb::getVisiteurs();
 
-                return view('valide_frais')->with('visiteur', $visiteur)
+
+                return view('valide_frais')->with('comptable', $comptable)
                                         ->with('lesMois', $lesMois)
-                                        ->with('infosVisiteur', $infosVisiteur);
+                                        ->with('infos', $infos);
+                                        
             }
         }
 
         //affichage des frais a valider
-        public function voir_valide_frais(){
+        public function voir_valide_frais(Request $request){
 
-            if( (session('visiteur')!=null)){
+            if( (session('comptable')!=null)){
+
+                
+                
                 //récupération des valeurs
-                $visiteur = session('visiteur');
+                $comptable = session('comptable');
                 $idVisiteur = $request['id'];
-                $Mois = $request['lstMois']; 
+                $mois = $request['lstMois']; 
 
                 //fonction qui va afficher les frais
-                $frais=getFraisMois($idVisiteur,$mois);
-
-                return view('voirValideFrais')->with('visiteur', $visiteur)
+                $frais=pdoGsb::getFraisMois($idVisiteur,$mois);
+                dd($frais);
+                return view('voirValideFrais')->with('comptable', $comptable)
                 ->with('frais', $frais);
                 
     

@@ -1,26 +1,28 @@
-@extends ('valide_frais')
-@section('contenu2')
+@extends ('sommaire')
+@section('contenu1')
 
-<h3>Fiche de frais du mois {{ $numMois }}-{{ $numAnnee }} : 
-    </h3>
-    <div class="encadre">
-    <p>
-    Etat : <strong>{{ $libEtat }} depuis le {{ $dateModif }} </strong>
-         <br> Montant validé : <strong>{{ $montantValide }} </strong>
-     </p>
+<h3>Fiche de frais : </h3>
+<div class="encadre">
   	<table class="listeLegere">
-  	   <caption>Eléments forfaitisés </caption>
-        <tr>
-            @foreach($lesFraisForfait as $unFraisForfait)
-			    <th> {{$unFraisForfait['libelle']}} </th>
-            @endforeach
-		</tr>
-        <tr>
-            @foreach($frais as $unFraisForfait)
-                <td class="qteForfait">{{ $unFraisForfait['quantite'] }} 
-                </td>
-            @endforeach
-		</tr>
+             <tr>
+                <th class=''> Id:</th>  
+                <th class=''> ETP</th>  
+                <th class=''> KM </th>   
+                <th class=''> NUI </th> 
+                <th class=''> REP</th> 
+           
+             </tr>
+               @foreach ( $frais as $unMontant )
+            <tr>
+              
+              <td><?=$unMontant['idVisiteur']?></td>
+              <td><?=$unMontant['ETP']?></td>
+              <td><?=$unMontant['KM']?></td>
+              <td><?=$unMontant['NUI']?></td>
+              <td><?=$unMontant['REP']?></td>
+           </tr>
+           @endforeach
+          
     </table>
-  	</div>
+  </div>
 @endsection
