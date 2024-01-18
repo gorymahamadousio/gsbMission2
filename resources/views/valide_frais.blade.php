@@ -15,16 +15,10 @@
           </select> </br>
           <label for="lstMois" >Mois : </label>
           <select id="lstMois"class="align-item-center" name="lstMois">
-              @foreach($lesMois as $mois)
-                  @if ($mois['mois'] == $mois)
+          @foreach($lesMois as $mois)
                     <option selected value="{{ $mois['mois'] }}">
-                      {{ $mois['numMois']}}/{{$mois['numAnnee'] }} 
+                      {{ $mois['mois']}}
                     </option>
-                  @else 
-                    <option value="{{ $mois['mois'] }}">
-                      {{ $mois['numMois']}}/{{$mois['numAnnee'] }} 
-                    </option>
-                  @endif
               @endforeach
           </select>
         </div>
@@ -32,6 +26,5 @@
           <input id="ok" type="submit" value="Valider" size="20" />
           <input id="annuler" type="reset" value="Effacer" size="20" />
         </div>
-          
         </form>
   @endsection 

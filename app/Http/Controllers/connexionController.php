@@ -17,10 +17,8 @@ class connexionController extends Controller
         $mdp = $request['mdp'];
 
         $visiteur = PdoGsb::getInfosVisiteur($login,$mdp);
-        $gestionnaire = PdoGsb::getInfosVisiteur($login,$mdp);
-        $compatble = PdoGsb::getInfosVisiteur($login,$mdp);
-        $gestionnaire=$visiteur;
-        $comptable=$visiteur;
+        $gestionnaire = $visiteur;
+        $comptable = $visiteur;
 
         if(!is_array($visiteur)){
             $erreurs[] = "Login ou mot de passe incorrect(s)";
@@ -36,7 +34,7 @@ class connexionController extends Controller
             session(['gestionnaire' => $gestionnaire]);
             return view('sommaire')->with('gestionnaire',session('gestionnaire'));
 
-        }else if($gestionnaire['typeUser']==3){
+        }else if($comptable['typeUser']==3){
             
             session(['comptable' => $comptable]);
             return view('sommaire')->with('comptable',session('comptable'));
@@ -46,6 +44,7 @@ class connexionController extends Controller
 
 
     function deconnexion(Request $request){
+
             $visiteur=session('visiteur');
             $gestionnaire=session('gestionnaire');
             $compatable=session('comptable');
@@ -55,21 +54,17 @@ class connexionController extends Controller
             session(['visiteur' => null]);
             return redirect()->route('chemin_connexion');
 
-
            }
-           else if($gestionnaire){
-
+           else if($compatable){
+            session(['comptable' => null]);
+            return redirect()->route('chemin_connexion');
+            
+           }else{
+            
             session(['gestionnaire' => null]);
             return redirect()->route('chemin_connexion');
 
-
-           }else{
-
-            session(['comptable' => null]);
-            return redirect()->route('chemin_connexion');
-
            }
-         
     }
            
 }

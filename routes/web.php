@@ -55,14 +55,9 @@ Route::get('test',[
 
 
 //route qui redirige vers mon controller gestionVisiteurController et va pointer sur la fonction concernée
-Route::get('visiteurs',[
-        'as'=>'chemin_visiteurs',
+Route::get('listeVisiteurs',[
+        'as'=>'chemin_liste_visiteurs',
         'uses'=>'gestionVisiteurController@liste_visiteurs'
-]);
-
-Route::get('lstvisiteurs',[
-        'as'=>'chemin_visiteurs_simple',
-        'uses'=>'gestionVisiteurController@liste_visiteurs_simple'
 ]);
 
 
@@ -96,7 +91,7 @@ Route::get('deleteVisiteur',[
 
 Route::get('etas',[ 
         'as'=>'chemin_etas',
-        'uses'=>'gestionVisiteurController@etas_visiteur'
+        'uses'=>'gestionVisiteurController@generatePDF'
 ]);
 
 Route::get('valideFrais',[ 

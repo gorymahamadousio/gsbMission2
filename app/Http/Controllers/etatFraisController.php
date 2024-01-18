@@ -57,14 +57,4 @@ class etatFraisController extends Controller
         }
     }
 
-
-    function test(){
-        if(session('visiteur')!=null){
-            $visiteur=session('visiteur');
-            $idVisiteur=$visiteur['id'];
-            return view('test')->with('visiteur',$visiteur);
-        }else{
-            return view('connexion')->with('erreur',null);
-        }
-    }
 }

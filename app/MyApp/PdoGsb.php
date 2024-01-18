@@ -381,7 +381,21 @@ class PdoGsb{
         $laLigne = $stmt->fetchAll();
 
 
-        return $laLigne;
+		return $laLigne;
+	}
+		//récuperer les mois disponible depuis fichefrais
+		public function getMoisFicheFrais(){
+			$sql="SELECT mois FROM fichefrais";
+	
+			$stmt = $this->monPdo->prepare($sql);
+			$stmt->execute();
+	
+			$laLigne= $stmt->fetchAll();
+			return $laLigne;
+		
+		}
+
+       
     }
 
-}
+
